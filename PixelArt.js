@@ -4,73 +4,29 @@ document.addEventListener('DOMContentLoaded', function() {
   const downloadButton = document.getElementById('download-button'); // Sélectionne le bouton de téléchargement
   const colorHistory = document.getElementById('color-list'); // Sélectionne la liste d'historique des couleurs
 
-  const defaultColor = "#fff"; // Couleur par défaut utilisée pour initialiser le color picker et les pixels
-  let colorpicker = defaultColor; // Variable pour stocker la couleur sélectionnée
+  const defaultColor = "#ffffff"; // Couleur par défaut blanche
+  let colorpicker = "#000000"; // Variable pour stocker la couleur sélectionnée, noir par défaut
+  let isSelecting = false; // Variable pour suivre si l'utilisateur est en train de dessiner
 
   var colorPicker = new iro.ColorPicker("#picker", { // Crée un nouveau sélecteur de couleur
     width: 120, // Définit la largeur du sélecteur de couleur
-    color: defaultColor // Définit la couleur initiale du sélecteur de couleur
+    color: "#FFFFFF" // Définit la couleur initiale du sélecteur de couleur
   });
 
   colorPicker.on('color:change', function(color) { // Événement déclenché lorsqu'une nouvelle couleur est sélectionnée dans le sélecteur
     colorpicker = color.hexString; // Met à jour la couleur sélectionnée
   });
 
-  const pixelSize = 20; // Taille en pixels de chaque pixel
-  const gridWidth = 50; // Largeur de la grille en nombre de pixels
-  const gridHeight = 25; // Hauteur de la grille en nombre de pixels
-
-  let isSelectingArea = false; // Variable pour indiquer si le mode de sélection de zone est activé
-  let startX, startY, endX, endY; // Coordonnées du début et de la fin de la sélection
-
-  // Gestionnaire d'événements pour le bouton de sélection de zone
-  const selectAreaButton = document.getElementById('select-area-button');
-  selectAreaButton.addEventListener('click', function() {
-    isSelectingArea = true; // Activer le mode de sélection de zone
-    canvas.style.cursor = 'crosshair'; // Modifier le curseur pour indiquer le mode de sélection de zone
-  });
-
-  // Gestionnaire d'événements pour suivre les mouvements de la souris pendant le mode de sélection de zone
-  canvas.addEventListener('mousedown', function(event) {
-    if (isSelectingArea) {
-      startX = event.offsetX;
-      startY = event.offsetY;
-      endX = startX;
-      endY = startY;
-      drawSelectionArea();
-      canvas.addEventListener('mousemove', mouseMoveHandler);
-    }
-  });
-
-  function mouseMoveHandler(event) {
-    endX = event.offsetX;
-    endY = event.offsetY;
-    drawSelectionArea();
+  // Déterminer la taille des pixels en fonction de la largeur de l'écran
+  let pixelSize = 16; // Taille par défaut réduite
+  if (window.innerWidth <= 480) {
+    pixelSize = 8;
+  } else if (window.innerWidth <= 768) {
+    pixelSize = 12;
   }
 
-  canvas.addEventListener('mouseup', function(event) {
-    if (isSelectingArea) {
-      canvas.removeEventListener('mousemove', mouseMoveHandler);
-      // Enregistrez les coordonnées de début et de fin pour une utilisation ultérieure
-      // Vous pouvez maintenant déterminer quels pixels sont inclus dans la sélection en utilisant startX, startY, endX et endY
-      isSelectingArea = false; // Désactiver le mode de sélection de zone
-      canvas.style.cursor = 'auto'; // Rétablir le curseur par défaut
-    }
-  });
-
-  // Fonction pour dessiner la zone de sélection sur le canvas
-  function drawSelectionArea() {
-    // Effacer le canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Redessiner tous les pixels
-    // NOTE: Vous devrez probablement implémenter une fonction pour cela
-    // Dessiner le rectangle de sélection
-    ctx.beginPath();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1;
-    ctx.rect(startX, startY, endX - startX, endY - startY);
-    ctx.stroke();
-  }
+  const gridWidth = 40; // Largeur de la grille réduite
+  const gridHeight = 25; // Hauteur de la grille
 
   // Crée une grille de pixels dans le canvas
   for (let i = 0; i < gridHeight; i++) {
@@ -85,12 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
       pixel.addEventListener('mousedown', function(event) {
         isSelecting = true;
         pixel.style.backgroundColor = colorpicker;
+        if (colorpicker !== defaultColor) {
+          addToColorHistory(colorpicker);
+        }
       });
+      
       pixel.addEventListener('mouseenter', function(event) {
         if (isSelecting) {
           pixel.style.backgroundColor = colorpicker;
         }
       });
+      
       pixel.addEventListener('mouseup', function(event) {
         isSelecting = false;
       });
@@ -112,8 +73,12 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault(); // Empêche le menu contextuel par défaut de s'afficher
     if (event.target.classList.contains('pixel')) { // Vérifie si l'élément cliqué est un pixel
       event.target.style.backgroundColor = defaultColor; // Réinitialise la couleur du pixel à la couleur par défaut
-      addToColorHistory(defaultColor); // Ajoute la couleur par défaut à l'historique
     }
+  });
+
+  // Arrête le dessin lorsque la souris quitte le canvas
+  canvas.addEventListener('mouseleave', function() {
+    isSelecting = false;
   });
 
   // Gère le clic sur le bouton de réinitialisation
@@ -174,6 +139,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const pixels = document.querySelectorAll('.pixel'); 
     pixels.forEach(pixel => {
       pixel.style.backgroundColor = defaultColor; // Réinitialise la couleur de chaque pixel à la couleur par défaut
+    });
+  }
+  
+  // Réinitialise l'historique des couleurs
+  function resetColorHistory() {
+    while (colorHistory.firstChild) {
+      colorHistory.removeChild(colorHistory.firstChild);
+    }
+  }
+
+  // Gestion du redimensionnement de la fenêtre
+  window.addEventListener('resize', function() {
+    // Mettre à jour la taille des pixels si nécessaire
+    let newPixelSize = 16;
+    if (window.innerWidth <= 480) {
+      newPixelSize = 8;
+    } else if (window.innerWidth <= 768) {
+      newPixelSize = 12;
+    }
+    
+    // Si la taille des pixels a changé, mettre à jour la grille
+    if (newPixelSize !== pixelSize) {
+      pixelSize = newPixelSize;
+      updatePixelSize();
+    }
+  });
+
+  // Fonction pour mettre à jour la taille des pixels
+  function updatePixelSize() {
+    const pixels = document.querySelectorAll('.pixel');
+    pixels.forEach(pixel => {
+      pixel.style.width = `${pixelSize}px`;
+      pixel.style.height = `${pixelSize}px`;
     });
   }
 });
