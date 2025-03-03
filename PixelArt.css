@@ -1,0 +1,288 @@
+body {
+  background: linear-gradient(90deg, rgba(173,56,56,1) 0%, rgba(227,148,233,1) 100%);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  background-size: cover;
+  height: 100vh;
+}
+
+
+h1 {
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 70px;
+  margin: 0.2em;
+  transition: ease-in-out;
+}
+
+.slide-in {
+  color:#38adad;
+  animation: slideIn 1s ease-in-out forwards;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.slide-in span {
+   color: #fffffff9;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+#canvas {
+    display: grid;
+    grid-template-columns: repeat(50, 20px); /* Répéter 60 fois une colonne de 20px */
+    grid-template-rows: repeat(25, 20px); /* Répéter 60 fois une ligne de 20px */
+}
+
+#canvas-container {
+    position: relative;
+    height: 500px;
+    margin-right: 20px;
+    margin-left: 20px;
+    border: 2px solid #ffffff; /* Ajout d'une bordure blanche */
+    border-radius: 10px; /* Ajout d'une bordure arrondie */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Ajout d'une ombre */
+    padding: 10px; /* Ajout d'un espace intérieur pour le cadre */
+}
+  
+
+#picker-container {
+  position: absolute;
+}
+
+.pixel {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.pixel:hover {
+  background-color: black;
+}
+
+.app{
+  display: flex;
+  gap: 40px;
+}
+
+#color-history {
+  right: 35px;
+  bottom: 300px;
+  position:fixed;
+  width: 365px;
+  height: 80px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
+#color-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+#color-list li {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 50%;
+}
+
+
+#select-area-button {
+  bottom: 440px;
+  right: 50px;
+  position: fixed;
+  font-size: 10px; /* Réduire la taille de la police */
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.5em 1.0em; /* Réduire le padding */
+  display: inline-block;
+  border-radius: 4em; /* Réduire le border-radius */
+  transition: all .2s;
+  border: none;
+  font-family: "Chakra Petch", sans-serif;
+  font-weight: 500;
+  color: #38adad;
+  background-color: whitesmoke;
+}
+
+ 
+ #select-area-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+ }
+ 
+ #select-area-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+ }
+ 
+ #select-area-button::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: all .4s;
+ }
+ 
+ #select-area-button::after {
+  background-color: #fff;
+ }
+ 
+ #select-area-button:hover::after {
+  transform: scaleX(1.4) scaleY(1.6);
+  opacity: 0;
+ }
+
+.download-button {
+  position: fixed;
+  left: 30px;
+  bottom: 15px;
+  overflow: hidden;
+  height: 3rem;
+  padding: 0 2rem;
+  border-radius: 1.5rem;
+  background: #3d3a4e;
+  background-size: 400%;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.download-button:hover::before {
+  transform: scaleX(1);
+}
+
+.download-button-content {
+  position: relative;
+  z-index: 1;
+}
+
+.download-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  width: 100%;
+  height: inherit;
+  border-radius: inherit;
+  background: linear-gradient(
+    82.3deg,
+    rgba(150, 93, 233, 1) 10.8%,
+    rgba(99, 88, 238, 1) 94.3%
+  );
+  transition: all 0.475s;
+}
+
+
+.reset-button {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  left: 1080px;
+  bottom: 40px;
+  border-width: 0;
+  padding: 0 8px 12px;
+  min-width: 10em;
+  box-sizing: border-box;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.reset-button-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+  padding: 8px 16px;
+  transform: translateY(0);
+  text-align: center;
+  font-family: "Chakra Petch", sans-serif;
+  color: #fff;
+  text-shadow: 0 -1px rgba(0, 0, 0, .25);
+  transition-property: transform;
+  transition-duration: .2s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.reset-button:active .reset-button-top {
+  transform: translateY(6px);
+}
+
+.reset-button-top::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  box-sizing: content-box;
+  background-image: radial-gradient(#099659, #9ae994);
+  text-align: center;
+  color: #000000;
+  box-shadow: inset 0 0 0px 1px rgba(255, 255, 255, .2), 0 1px 2px 1px rgba(255, 255, 255, .2);
+  transition-property: border-radius, padding, width, transform;
+  transition-duration: .2s;
+}
+
+.reset-button:active .reset-button-top::after {
+  border-radius: 6px;
+  padding: 0 2px;
+}
+
+.reset-button-bottom {
+  position: absolute;
+  z-index: -1;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 8px / 16px 16px 8px 8px;
+  padding-top: 6px;
+  width: calc(100% - 8px);
+  height: calc(100% - 10px);
+  box-sizing: content-box;
+  background-color: #9ae994;
+  background-image: radial-gradient(4px 8px at 4px calc(100% - 8px), rgba(255, 255, 255, .25), transparent), radial-gradient(4px 8px at calc(100% - 4px) calc(100% - 8px), rgba(255, 255, 255, .25), transparent), radial-gradient(16px at -4px 0, white, transparent), radial-gradient(16px at calc(100% + 4px) 0, white, transparent);
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5), inset 0 -1px 3px 3px rgba(0, 0, 0, .4);
+  transition-property: border-radius, padding-top;
+  transition-duration: .2s;
+}
+
+.reset-button:active .reset-button-bottom {
+  border-radius: 10px 10px 8px 8px / 8px;
+  padding-top: 0;
+}
+
+.reset-button-base {
+  position: absolute;
+  z-index: -2;
+  top: 4px;
+  left: 0;
+  border-radius: 12px;
+  width: 100%;
+  height: calc(100% - 4px);
+  background-color: rgba(0, 0, 0, .15);
+  box-shadow: 0 1px 1px 0 rgba(255, 255, 255, .75), inset 
+}

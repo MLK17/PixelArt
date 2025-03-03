@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+  <title>PixelCanvas - Éditeur de Pixel Art</title>
+  <!-- Ajout de la librairie html2canvas pour convertir le canvas en image -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="PixelArt.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <!-- Ajout de la favicon -->
+  <link rel="icon" href="favicon.png" type="image/x-icon">
+</head>
+<body>
+  <h1 class="slide-in">Pixel<span>Art</span>Maker</h1>
+
+  <main class="app">
+    <div id="canvas-container">
+      <div id="canvas"></div>
+      <div id="picker-container"></div> 
+    </div>
+    <div id="picker"></div>
+    <div id="color-history">
+      <div id="color-list"></div>
+      <button id="select-area-button">Sélectionner une zone</button>
+    </div>
+  </main>
+
+  <button type="button" class="reset-button">
+    <div class="reset-button-top">Clear</div>
+    <div class="reset-button-bottom"></div>
+    <div class="reset-button-base"></div>
+  </button>
+
+  <button id="download-button" class="button download-button">
+    <span class="download-button-content">Download</span>
+  </button>
+
+  <script src="PixelArt.js"></script>
+</body>
+</html>
